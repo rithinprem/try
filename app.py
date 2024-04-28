@@ -1,11 +1,16 @@
-from flask import Flask
+from flask import Flask, abort,request
 import requests
 import json
 from bs4 import BeautifulSoup
 import pandas as pd
 
 app = Flask(__name__)
-
+blocked_user_agents = ["Go-http-client/1.1"]
+@app.before_request
+def block_user_agent():
+    user_agent = request.headers.get('User-Agent')
+    if user_agent in blocked_user_agents:
+        abort(403)
 
 @app.route('/')
 def hello_world():
